@@ -3,7 +3,7 @@ package com.restfulapi.spring_rest.Modals;
 import jakarta.persistence.*;
 
 @Entity // Entity basically tells Java that this is a database blueprint. It will also create the bean for this class
-@Table(name = "T_Student") // if we use this then the table name will be taken from this otherwise the table name will be the name of the class.
+@Table(name = "Student") // if we use this then the table name will be taken from this otherwise the table name will be the name of the class.
 public class Student {
     @Id
     @GeneratedValue // This basically will generate a new value for every record. Similar to Unique_Trans_id or History_seq.
