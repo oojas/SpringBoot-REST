@@ -1,0 +1,114 @@
+autowired : Basically means that we set the values.
+
+create a class repo which extends JPARepository<ObjectType,Primary Key>.
+Create an object reference for the repo class.
+use that to interact with the database. studentRepo -> studentRepo.save(); -> studentRepo.findAll(), -> studentRepo.findById()
+RequestParam : is basically which comes after & like &user=ojas&pass=oo. Here in order to get value for user and pass we use request param but
+Path Variable is basically getting from the api. Like findByid : so localhost:9000/student/12. 12 is the path variable.\\
+
+One to Many : Means one thing can have a lot of other things : Eg : One school can have a lot of students but students will only have one school.
+One to One : Means one thing can only have one other thing. Eg ; One student can only have one student profile. And one student profile can only contain information
+about one student.
+
+
+In Spring Boot, the @JoinColumn annotation is used in JPA (Java Persistence API) to specify the column used for joining an entity association. It’s typically used when defining a foreign key column in a relational mapping between two entities.
+
+Here’s how it works:
+
+One-to-One and Many-to-One Associations: @JoinColumn is placed on the field in the owning entity that holds the reference to another entity.
+
+Specifies the Foreign Key Column: The @JoinColumn annotation allows you to name the foreign key column, customize its properties, and control how it behaves in terms of constraints (e.g., nullable, unique).
+
+Example
+In this example, let’s say you have two entities: Student and Address, where each Student has one Address.
+
+java
+Copy code
+@Entity
+public class Student {
+    @Id
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+}
+Here’s what each parameter does:
+
+name = "address_id" specifies the name of the column in the Student table that stores the foreign key.
+referencedColumnName = "id" specifies the column in the Address table to which address_id refers.
+Without @JoinColumn, JPA would automatically generate a default foreign key column based on naming conventions, but @JoinColumn gives you control over the column name and its behavior.
+
+
+
+
+
+
+You said:
+What does JSON Managed Reference and JSON Back reference do in springboot
+ChatGPT said:
+ChatGPT
+In Spring Boot, the @JsonManagedReference and @JsonBackReference annotations are used to manage circular references between entities when using the Jackson library to serialize objects to JSON. They are especially useful in bidirectional relationships, as they help prevent infinite recursion during serialization.
+
+How They Work
+@JsonManagedReference: This annotation is placed on the "parent" side of a relationship. It indicates that this is the forward part of the relationship, meaning this side should be serialized in the JSON output.
+
+@JsonBackReference: This is placed on the "child" side of the relationship. It acts as the inverse reference and is ignored during serialization, preventing circular references.
+
+Together, they create a one-directional serialization path, allowing the "parent" to reference the "child" in the JSON output without the child re-referencing the parent, which would otherwise lead to an infinite loop.
+
+Example
+Let’s say you have two entities, Author and Book, with a bidirectional one-to-many relationship (one Author has many Books).
+
+java
+Copy code
+@Entity
+public class Author {
+    @Id
+    private Long id;
+
+    private String name;
+
+    @OneToMany(mappedBy = "author")
+    @JsonManagedReference
+    private List<Book> books;
+}
+
+@Entity
+public class Book {
+    @Id
+    private Long id;
+
+    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    @JsonBackReference
+    private Author author;
+}
+Explanation
+@JsonManagedReference on Author.books: Tells Jackson to serialize the books list when serializing an Author object.
+@JsonBackReference on Book.author: Tells Jackson to skip serializing the author property of each Book to avoid a circular reference.
+JSON Output
+When you retrieve an Author, the JSON might look like this:
+
+json
+Copy code
+{
+    "id": 1,
+    "name": "Author Name",
+    "books": [
+        {
+            "id": 101,
+            "title": "Book Title 1"
+        },
+        {
+            "id": 102,
+            "title": "Book Title 2"
+        }
+    ]
+}
+When you retrieve a Book, it won’t include the Author details, which prevents circular references.
+
+When to Use
+Use @JsonManagedReference and @JsonBackReference when you have bidirectional relationships in your entities, and you need to prevent circular references in your JSON serialization with Jackson.

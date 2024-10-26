@@ -1,5 +1,6 @@
 package com.restfulapi.spring_rest.Modals;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity // Entity basically tells Java that this is a database blueprint. It will also create the bean for this class
@@ -18,12 +19,27 @@ public class Student {
     public Student(){ // this is declared because in order to create entity we have to have an empty constructor.
 
     }
-    public Student(int id, String firstName, String lastName, String email, int age) {
+
+    @OneToOne(
+            mappedBy = "student",
+            cascade = CascadeType.ALL // this means if I delete one student the student profile will also get deleted.
+    )
+    private StudentProfile studentProfile;
+    @ManyToOne
+    @JoinColumn(
+            name = "school_id"// this creates a foreign key for mapping between two tables.
+            // here we cant use reference column because id of school cannot be equal to id of student. for example : id ;1 school : Nagbani but id:1 student can be anyone so join query will not work.
+    )
+    @JsonBackReference // this is used in child class of the relationship to prevent infinit recursion
+    private School school;
+    public Student(int id, String firstName, String lastName, String email, int age,School school,StudentProfile studentProfile) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
+        this.school=school;
+        this.studentProfile=studentProfile;
     }
 
     public int getId() {
@@ -64,5 +80,20 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 }

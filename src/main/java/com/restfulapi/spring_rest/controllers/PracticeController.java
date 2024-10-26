@@ -1,4 +1,4 @@
-package com.restfulapi.spring_rest.controllers;
+package com.restfulapi.spring_rest.Controllers;
 
 import com.restfulapi.spring_rest.Modals.Order;
 import org.springframework.web.bind.annotation.*;

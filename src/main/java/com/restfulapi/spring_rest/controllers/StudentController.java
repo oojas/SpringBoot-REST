@@ -25,9 +25,7 @@ public class StudentController {
     }
     @PostMapping(value = "/storeAll")
     public String storeAllStudents(@RequestBody List<Student> studentList){
-        for(Student studentcargo:studentList){
-            studentRepository.save(studentcargo);
-        }
+        studentRepository.saveAll(studentList);
         return "All the student details are successfully saved";
     }
     @GetMapping(value = "/getStudents")
@@ -52,5 +50,10 @@ public class StudentController {
                 return ResponseEntity.ok("The student details with the id "+id+" have been deleted");
             }
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The id does not exist in the database");
+    }
+
+    @GetMapping(value = "/search/{first-name}")
+    public List<Student> findByFirstName(@PathVariable(value = "first-name") String firstName){
+        return studentRepository.findAllByFirstNameContaining(firstName);
     }
 }
