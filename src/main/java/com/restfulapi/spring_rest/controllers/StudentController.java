@@ -1,4 +1,7 @@
 package com.restfulapi.spring_rest.Controllers;
+import com.restfulapi.spring_rest.DTO.StudentDTO;
+import com.restfulapi.spring_rest.DTO.StudentResponseDTO;
+import com.restfulapi.spring_rest.Modals.School;
 import com.restfulapi.spring_rest.Modals.Student;
 import com.restfulapi.spring_rest.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class StudentController {
-    private StudentRepository studentRepository;
     @Autowired
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    private StudentRepository studentRepository;
+
+
 
     @PostMapping(value = "/store")
     public Student storeMessage(@RequestBody Student studentDetails) {
@@ -24,12 +27,12 @@ public class StudentController {
         return  studentRepository.save(studentDetails);
     }
     @PostMapping(value = "/storeAll")
-    public String storeAllStudents(@RequestBody List<Student> studentList){
-        studentRepository.saveAll(studentList);
-        return "All the student details are successfully saved";
+    public List<StudentResponseDTO> storeAllStudents(@RequestBody List<StudentDTO> studentList){
+     List<Student> student= studentRepository.saveAll(toStudent(studentList));
+        return toStudentResponse(student);
     }
     @GetMapping(value = "/getStudents")
-    public List<Student> getAllStudents(){
+    public List<Student > getAllStudents(){
         return studentRepository.findAll();
     }
     @GetMapping(value = "/getStudent/{student-id}")
@@ -55,5 +58,27 @@ public class StudentController {
     @GetMapping(value = "/search/{first-name}")
     public List<Student> findByFirstName(@PathVariable(value = "first-name") String firstName){
         return studentRepository.findAllByFirstNameContaining(firstName);
+    }
+    private List<Student> toStudent(List<StudentDTO> studentDTO){
+        List<Student> student=new ArrayList<>();
+        for(StudentDTO dto:studentDTO){
+            Student st=new Student();
+            st.setFirstName(dto.firstName());
+            st.setLastName(dto.lastName());
+            st.setEmail(dto.email());
+            School sc=new School();
+            sc.setId(dto.schoolId());
+            st.setSchool(sc);
+            student.add(st);
+        }
+        return student;
+    }
+
+    private List<StudentResponseDTO> toStudentResponse(List<Student> student){
+        List<StudentResponseDTO> studentList=new ArrayList<>();
+        for(Student st:student){
+            studentList.add(new StudentResponseDTO(st.getFirstName(),st.getLastName(),st.getEmail()));
+        }
+        return studentList;
     }
 }
