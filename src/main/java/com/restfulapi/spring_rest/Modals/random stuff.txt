@@ -125,3 +125,7 @@ age or other fields which are null. I can show them with their own DTO's.
 
 SchoolDTO : This is written because right now whenever we are fetching the schools we are also getting the students which are inside the school. This can affect the performance of our API. In order to just get the schools and
 not the students we will write this.
+
+---------------------------------------------------\\------------------------------------------------
+
+DATA VALIDATION ON UI :
