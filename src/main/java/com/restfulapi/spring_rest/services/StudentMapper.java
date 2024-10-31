@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 public class StudentMapper {
     public List<Student> toStudent(List<StudentDTO> studentDTO) {
+        if(studentDTO.isEmpty())throw new NullPointerException();
         List<Student> student = new ArrayList<>();
         for (StudentDTO dto : studentDTO) {
             Student st = new Student();

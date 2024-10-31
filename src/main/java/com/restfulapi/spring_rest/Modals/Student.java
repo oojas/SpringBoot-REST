@@ -12,12 +12,9 @@ public class Student {
     @Column(name = "firstName") // Using @Column and giving name will be used for naming the column in the DB. This will override the actual variable name for DB only.
     // We can also give other things like size or nullable or insertable or updatable(like create_dt) values for the column in the column annotation.
     private String firstName;
-    @Column(
-            nullable = false
-    )
+
     private String lastName;
-    @Column(unique = true,
-            nullable = false
+    @Column(unique = true
     ) // This will tell the DB that email column should have unique values only.
     private String email;
     private int age;
@@ -45,6 +42,12 @@ public class Student {
         this.age = age;
         this.school=school;
         this.studentProfile=studentProfile;
+    }
+
+    public Student(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     public int getId() {

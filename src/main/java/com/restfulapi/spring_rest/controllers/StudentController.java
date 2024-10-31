@@ -8,9 +8,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class StudentController {
@@ -54,4 +56,16 @@ public class StudentController {
         return this.studentService.getStudentByFirstName(firstName);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp){
+        Map<String,String> errors=new HashMap<>();
+        exp.getBindingResult().getAllErrors().forEach(
+                objectError -> {
+                    var fieldName=((FieldError)objectError).getField();
+                    var fieldMessage=objectError.getDefaultMessage();
+                    errors.put(fieldName,fieldMessage);
+                }
+        );
+        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+    }
 }

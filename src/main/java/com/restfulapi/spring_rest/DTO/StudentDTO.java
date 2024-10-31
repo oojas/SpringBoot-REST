@@ -9,9 +9,10 @@ public record StudentDTO(
                 // StudentDTO
         String firstName,
         @NotEmpty
-        String lastName,
+        String lastName, // we can use message field for a customized message if we have to
         @NotEmpty
         String email,
         Integer schoolId // for the school id.
 ) {
 }
+// there are alot of annotations which we can use with validation package. like @Email, Future, NotNull, Null, NotBlank etc
