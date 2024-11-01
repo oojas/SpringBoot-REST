@@ -34,14 +34,12 @@ public class Student {
     )
     @JsonBackReference // this is used in child class of the relationship to prevent infinit recursion
     private School school;
-    public Student(int id, String firstName, String lastName, String email, int age,School school,StudentProfile studentProfile) {
+    public Student(int id, String firstName, String lastName, String email, int age) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
-        this.school=school;
-        this.studentProfile=studentProfile;
     }
 
     public Student(String firstName, String lastName, String email) {

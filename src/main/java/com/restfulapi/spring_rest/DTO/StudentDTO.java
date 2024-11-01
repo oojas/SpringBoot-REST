@@ -12,6 +12,7 @@ public record StudentDTO(
         String lastName, // we can use message field for a customized message if we have to
         @NotEmpty
         String email,
+        int age,
         Integer schoolId // for the school id.
 ) {
 }

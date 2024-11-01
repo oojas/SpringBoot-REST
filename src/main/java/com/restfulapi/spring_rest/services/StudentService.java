@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -42,5 +43,10 @@ public class StudentService {
 
     public List<Student> getStudentByFirstName(String firstName) {
         return studentRepository.findAllByFirstNameContaining(firstName);
+    }
+    public List<StudentResponseDTO> findByAgeAndSchoolId(int id){
+       List<Student> studentList=studentRepository.findAllByAgeAndSchoolId(id);
+      // List<Student> stList=studentList.stream().map(student->new Student((Integer)student[0],(String)student[1],(String)student[2],(String)student[3],(int)student[4])).collect(Collectors.toList());
+       return studentMapper.toStudentResponse(studentList);
     }
 }

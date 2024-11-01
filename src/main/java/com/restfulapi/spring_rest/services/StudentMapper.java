@@ -19,6 +19,9 @@ public class StudentMapper {
             st.setFirstName(dto.firstName());
             st.setLastName(dto.lastName());
             st.setEmail(dto.email());
+            if(dto.age()!=0){
+                st.setAge(dto.age());
+            }
             School sc = new School();
             sc.setId(dto.schoolId());
             st.setSchool(sc);

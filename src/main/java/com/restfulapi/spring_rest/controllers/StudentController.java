@@ -68,4 +68,9 @@ public class StudentController {
         );
         return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping(value = "/findStudentsByAge/{id}")
+    public List<StudentResponseDTO> findByAgeAndSchoolId(@PathVariable(value = "id") int id){
+        return studentService.findByAgeAndSchoolId(id);
+    }
 }
